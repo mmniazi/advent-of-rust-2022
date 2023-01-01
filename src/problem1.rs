@@ -1,18 +1,18 @@
-use fs::read_to_string;
 use std::collections::BinaryHeap;
-use std::fs;
 
 fn parse() -> BinaryHeap<i64> {
-    read_to_string("inputs/1_1.txt").expect("file to be readable")
+    include_str!("../inputs/1_1.txt")
         .split("\n\n")
-        .map(|block| block
-            .lines()
-            .map(|line| line
-                .trim()
-                .parse::<i64>().expect("valid number")
-            )
-            .sum()
-        )
+        .map(|block| {
+            block
+                .lines()
+                .map(|line| {
+                    line.trim()
+                        .parse::<i64>()
+                        .expect("valid number")
+                })
+                .sum()
+        })
         .collect()
 }
 

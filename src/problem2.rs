@@ -1,6 +1,3 @@
-use fs::read_to_string;
-use std::fs;
-
 use MatchResult::*;
 use Shape::*;
 
@@ -21,8 +18,7 @@ impl MatchResult {
     }
 }
 
-#[derive(PartialEq)]
-#[derive(Copy, Clone)]
+#[derive(PartialEq, Copy, Clone)]
 enum Shape {
     Rock,
     Paper,
@@ -56,19 +52,24 @@ impl Shape {
 }
 
 fn parse() -> Vec<(Shape, char)> {
-    let file_path = "inputs/2_1.txt";
-
-    read_to_string(file_path).expect("file to be readable")
+    include_str!("../inputs/2_1.txt")
         .lines()
         .map(|line| {
-            let left_char = line.chars().nth(0).expect("left move");
-            let right_char = line.chars().nth(2).expect("right move");
+            let left_char = line
+                .chars()
+                .next()
+                .expect("left move");
+            let right_char = line
+                .chars()
+                .nth(2)
+                .expect("right move");
             let left = match left_char {
                 'A' => Some(Rock),
                 'B' => Some(Paper),
                 'C' => Some(Scissors),
-                _ => None
-            }.expect("value to be A, B or C");
+                _ => None,
+            }
+            .expect("value to be A, B or C");
             (left, right_char)
         })
         .collect()
@@ -93,8 +94,9 @@ pub(crate) fn problem2_1() -> i64 {
                 'X' => Some(Rock),
                 'Y' => Some(Paper),
                 'Z' => Some(Scissors),
-                _ => None
-            }.expect("value to be X, Y or Z");
+                _ => None,
+            }
+            .expect("value to be X, Y or Z");
             (left, right)
         })
         .collect();
@@ -110,17 +112,17 @@ pub(crate) fn problem2_2() -> i64 {
                 'X' => Some(Lose),
                 'Y' => Some(Draw),
                 'Z' => Some(Win),
-                _ => None
-            }.expect("value to be X, Y or Z");
+                _ => None,
+            }
+            .expect("value to be X, Y or Z");
             (left, right)
         })
         .map(|(left, result)| match (&left, result) {
             (_, Win) => (left, left.defeated_by()),
             (_, Lose) => (left, left.defeats()),
-            _ => (left.clone(), left)
+            _ => (left, left),
         })
         .collect();
 
     count_score(vector)
 }
-
